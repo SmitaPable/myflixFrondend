@@ -8,6 +8,7 @@ SignUp Page:
 Create Instance and create elestic IP, Add ports 8080(jenkins), 8081(app port) and 9000(sonarqube) by editing inbound rules
 Connect the instance and clone myflix repo 
 **Install docker**
+
 sudo apt-get update
 sudo apt-get install docker.io -y
 sudo usermod -aG docker $USER  # Replace with your system's username, e.g., 'ubuntu'
