@@ -19,6 +19,13 @@ docker images
 docker run -d -p 8081:80 netflix
 docker ps
 copy IP and add IP:8081 and run 
+**Myflix**
+![image](https://github.com/SmitaPable/myflixFrondend/assets/146085760/05c13817-9107-49f4-bb20-8da4a494d8f9)
+![image](https://github.com/SmitaPable/myflixFrondend/assets/146085760/0a425509-cbb2-4ced-902b-89ce33adf96f)
+![image](https://github.com/SmitaPable/myflixFrondend/assets/146085760/628e86da-e6ab-4a19-b1ab-d2fa054d130d)
+![image](https://github.com/SmitaPable/myflixFrondend/assets/146085760/02480ccf-5126-4d66-8bab-0e9246c4833f)
+
+
 
 **Sonarqube**:
 docker run -d --name sonar -p 9000:9000 sonarqube:lts-community
@@ -123,8 +130,12 @@ pipeline {
         }
     }
 }
+![image](https://github.com/SmitaPable/myflixFrondend/assets/146085760/f40fc945-50f7-4de4-94ce-5b3e5defc71c)
 
-Add Project On Sonarqube and set up , once you will build pipeline report will be generated on sonarqube
+Add Project On **Sonarqube** and set up , once you will build pipeline report will be generated on sonarqube
+![image](https://github.com/SmitaPable/myflixFrondend/assets/146085760/20504654-36ea-4e93-ae83-91d55b1177c1)
+
+You can add trivy on docker and build docker on pipeline take reference of https://www.youtube.com/watch?v=g8X5AoqCJHc to continue.
 
 
 
