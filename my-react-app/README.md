@@ -44,24 +44,24 @@ Meanwhile download **trivy**
 <br>trivy will give you report of file system.
 
 **Install Jenkins**
-sudo apt update
-sudo apt install fontconfig openjdk-17-jre
-java -version
-openjdk version "17.0.8" 2023-07-18
-OpenJDK Runtime Environment (build 17.0.8+7-Debian-1deb12u1)
-OpenJDK 64-Bit Server VM (build 17.0.8+7-Debian-1deb12u1, mixed mode, sharing)
+<br>sudo apt update
+<br>sudo apt install fontconfig openjdk-17-jre
+<br>java -version
+<br>openjdk version "17.0.8" 2023-07-18
+<br>OpenJDK Runtime Environment (build 17.0.8+7-Debian-1deb12u1)
+<br>OpenJDK 64-Bit Server VM (build 17.0.8+7-Debian-1deb12u1, mixed mode, sharing)
 
-#jenkins
-sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
-https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
-echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
-https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
-/etc/apt/sources.list.d/jenkins.list > /dev/null
-sudo apt-get update
-sudo apt-get install jenkins
-sudo systemctl start jenkins
-sudo systemctl enable jenkins   
-To extract your password sudo cat /var/lib/jenkins/secrets/initialAdminPassword and username will be admin only
+<br>#jenkins
+<br>sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+<br>https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+<br>echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+<br>https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+<br>/etc/apt/sources.list.d/jenkins.list > /dev/null
+<br>sudo apt-get update
+<br>sudo apt-get install jenkins
+<br>sudo systemctl start jenkins
+<br>sudo systemctl enable jenkins   
+<br> To extract your password sudo cat /var/lib/jenkins/secrets/initialAdminPassword and username will be admin only
 
 **Install Necessary Plugins in Jenkins:**
 
