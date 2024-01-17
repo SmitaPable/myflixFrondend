@@ -1,70 +1,133 @@
-# Getting Started with Create React App
+**Myflix LoginPage**:
+![image](https://github.com/SmitaPable/myflixFrondend/assets/146085760/815cc4b1-2216-4a38-986c-39445d397d0c)
+After SignIn >> HomePage
+![image](https://github.com/SmitaPable/myflixFrondend/assets/146085760/bdd81b50-b619-4af0-8d9a-ee39773b51c2)
+SignUp Page:
+![image](https://github.com/SmitaPable/myflixFrondend/assets/146085760/f997b748-41b2-4a88-893a-f1d4f6e441f4)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Create Instance and create elestic IP, Add ports 8080(jenkins), 8081(app port) and 9000(sonarqube) by editing inbound rules
+Connect the instance and clone myflix repo 
+**Install docker**
+sudo apt-get update
+sudo apt-get install docker.io -y
+sudo usermod -aG docker $USER  # Replace with your system's username, e.g., 'ubuntu'
+newgrp docker
+sudo chmod 777 /var/run/docker.sock
 
-## Available Scripts
+build docker with : docker build --build-arg TMDB_V3_API_KEY=c560998e5f8524298c2c0a492f2f0e97 -t netflix .
+docker images
+docker run -d -p 8081:80 netflix
+docker ps
+copy IP and add IP:8081 and run 
 
-In the project directory, you can run:
+**Sonarqube**:
+docker run -d --name sonar -p 9000:9000 sonarqube:lts-community
+open IP:9000 in the browser
+bydefault userid and password will be admin
 
-### `npm start`
+Meanwhile download **trivy**
+sudo apt-get install wget apt-transport-https gnupg lsb-release
+wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+sudo apt-get update
+sudo apt-get install trivy 
+trivy image <imageID of your myflix>
+trivy will give you report of file system.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**Install Jenkins**
+sudo apt update
+sudo apt install fontconfig openjdk-17-jre
+java -version
+openjdk version "17.0.8" 2023-07-18
+OpenJDK Runtime Environment (build 17.0.8+7-Debian-1deb12u1)
+OpenJDK 64-Bit Server VM (build 17.0.8+7-Debian-1deb12u1, mixed mode, sharing)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+#jenkins
+sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+/etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt-get update
+sudo apt-get install jenkins
+sudo systemctl start jenkins
+sudo systemctl enable jenkins   
+To extract your password sudo cat /var/lib/jenkins/secrets/initialAdminPassword and username will be admin only
 
-### `npm test`
+**Install Necessary Plugins in Jenkins:**
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Goto Manage Jenkins →Plugins → Available Plugins →
 
-### `npm run build`
+Install below plugins
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1 Eclipse Temurin Installer (Install without restart)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2 SonarQube Scanner (Install without restart)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3 NodeJs Plugin (Install Without restart)
 
-### `npm run eject`
+4 Email Extension Plugin
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Configure Java and Nodejs in Global Tool Configuration
+Goto Manage Jenkins → Tools → Install JDK(17) and NodeJs(16)→ Click on Apply and Save
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+SonarQube
+Create the token
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Goto Jenkins Dashboard → Manage Jenkins → Credentials → Add Secret Text. It should look like this
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+After adding sonar token
 
-## Learn More
+Click on Apply and Save
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+**Create a CI/CD pipeline**
+pipeline {
+    agent any
+    tools {
+        jdk 'jdk17'
+        nodejs 'node16'
+    }
+    environment {
+        SCANNER_HOME = tool 'sonar-scanner'
+    }
+    stages {
+        stage('clean workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+        stage('Checkout from Git') {
+            steps {
+                git branch: 'main', url: 'https://github.com/N4si/DevSecOps-Project.git'
+            }
+        }
+        stage("Sonarqube Analysis") {
+            steps {
+                withSonarQubeEnv('sonar-server') {
+                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Netflix \
+                    -Dsonar.projectKey=Netflix'''
+                }
+            }
+        }
+        stage("quality gate") {
+            steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token'
+                }
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                sh "npm install"
+            }
+        }
+    }
+}
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Add Project On Sonarqube and set up , once you will build pipeline report will be generated on sonarqube
 
-### Code Splitting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-### Analyzing the Bundle Size
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-### Making a Progressive Web App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
