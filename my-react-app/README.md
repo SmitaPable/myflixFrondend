@@ -89,55 +89,55 @@ After adding sonar token
 
 Click on Apply and Save
 
-**Create a CI/CD pipeline**
-pipeline {
-    agent any
-    tools {
-        jdk 'jdk17'
-        nodejs 'node16'
-    }
-    environment {
-        SCANNER_HOME = tool 'sonar-scanner'
-    }
-    stages {
-        stage('clean workspace') {
-            steps {
-                cleanWs()
-            }
-        }
-        stage('Checkout from Git') {
-            steps {
-                git branch: 'main', url: 'https://github.com/N4si/DevSecOps-Project.git'
-            }
-        }
-        stage("Sonarqube Analysis") {
-            steps {
-                withSonarQubeEnv('sonar-server') {
-                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Netflix \
-                    -Dsonar.projectKey=Netflix'''
-                }
-            }
-        }
-        stage("quality gate") {
-            steps {
-                script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token'
-                }
-            }
-        }
-        stage('Install Dependencies') {
-            steps {
-                sh "npm install"
-            }
-        }
-    }
-}
+<br>**Create a CI/CD pipeline**
+<br>pipeline {
+<br>    agent any
+<br>    tools {
+<br>        jdk 'jdk17'
+<br>        nodejs 'node16'
+<br>    }
+<br>    environment {
+<br>        SCANNER_HOME = tool 'sonar-scanner'
+<br>    }
+<br>    stages {
+<br>        stage('clean workspace') {
+<br>            steps {
+<br>                cleanWs()
+<br>           }
+<br>        }
+<br>        stage('Checkout from Git') {
+<br>            steps {
+<br>                git branch: 'main', url: 'https://github.com/N4si/DevSecOps-Project.git'
+<br>            }
+<br>        }
+<br>        stage("Sonarqube Analysis") {
+<br>            steps {
+<br>                withSonarQubeEnv('sonar-server') {
+<br>                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Netflix \
+<br>                    -Dsonar.projectKey=Netflix'''
+<br>                }
+<br>            }
+<br>        }
+<br>        stage("quality gate") {
+<br>            steps {
+<br>                script {
+<br>                    waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token'
+<br>                }
+<br>            }
+<br>        }
+<br>        stage('Install Dependencies') {
+<br>            steps {
+<br>                sh "npm install"
+<br>            }
+<br>        }
+<br>    }
+<br>}
 ![image](https://github.com/SmitaPable/myflixFrondend/assets/146085760/f40fc945-50f7-4de4-94ce-5b3e5defc71c)
 
-Add Project On **Sonarqube** and set up , once you will build pipeline report will be generated on sonarqube
+<br>Add Project On **Sonarqube** and set up , once you will build pipeline report will be generated on sonarqube
 ![image](https://github.com/SmitaPable/myflixFrondend/assets/146085760/20504654-36ea-4e93-ae83-91d55b1177c1)
 
-You can add trivy on docker and build docker on pipeline take reference of https://www.youtube.com/watch?v=g8X5AoqCJHc to continue.
+<br>You can add trivy on docker and build docker on pipeline take reference of https://www.youtube.com/watch?v=g8X5AoqCJHc to continue.
 
 
 
