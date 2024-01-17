@@ -9,18 +9,19 @@ Create Instance and create elestic IP, Add ports 8080(jenkins), 8081(app port) a
 Connect the instance and clone myflix repo 
 **Install docker**
 
-sudo apt-get update
-sudo apt-get install docker.io -y
-sudo usermod -aG docker $USER  # Replace with your system's username, e.g., 'ubuntu'
-newgrp docker
-sudo chmod 777 /var/run/docker.sock
+<br>sudo apt-get update
+<br>sudo apt-get install docker.io -y
+<br>sudo usermod -aG docker $USER  # Replace with your system's username, e.g., 'ubuntu'
+<br>newgrp docker
+<br>sudo chmod 777 /var/run/docker.sock
 
-build docker with : docker build --build-arg TMDB_V3_API_KEY=c560998e5f8524298c2c0a492f2f0e97 -t netflix .
-docker images
-docker run -d -p 8081:80 netflix
-docker ps
+<br>build docker with : docker build --build-arg TMDB_V3_API_KEY=c560998e5f8524298c2c0a492f2f0e97 -t netflix .
+<br> docker images
+<br>docker run -d -p 8081:80 netflix
+<br>docker ps
 copy IP and add IP:8081 and run 
-**Myflix**
+
+<br>**Myflix**
 ![image](https://github.com/SmitaPable/myflixFrondend/assets/146085760/05c13817-9107-49f4-bb20-8da4a494d8f9)
 ![image](https://github.com/SmitaPable/myflixFrondend/assets/146085760/0a425509-cbb2-4ced-902b-89ce33adf96f)
 ![image](https://github.com/SmitaPable/myflixFrondend/assets/146085760/628e86da-e6ab-4a19-b1ab-d2fa054d130d)
@@ -29,18 +30,18 @@ copy IP and add IP:8081 and run
 
 
 **Sonarqube**:
-docker run -d --name sonar -p 9000:9000 sonarqube:lts-community
+<br>docker run -d --name sonar -p 9000:9000 sonarqube:lts-community
 open IP:9000 in the browser
 bydefault userid and password will be admin
 
 Meanwhile download **trivy**
-sudo apt-get install wget apt-transport-https gnupg lsb-release
-wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
-sudo apt-get update
-sudo apt-get install trivy 
-trivy image <imageID of your myflix>
-trivy will give you report of file system.
+<br>sudo apt-get install wget apt-transport-https gnupg lsb-release
+<br>wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+<br>echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+<br>sudo apt-get update
+<br>sudo apt-get install trivy 
+<br>trivy image <imageID of your myflix>
+<br>trivy will give you report of file system.
 
 **Install Jenkins**
 sudo apt update
